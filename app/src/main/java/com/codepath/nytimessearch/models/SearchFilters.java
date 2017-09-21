@@ -33,7 +33,7 @@ public class SearchFilters implements Serializable {
 
     public SearchFilters() {
         beginDate = new Date(0);
-        sortOrder = SortOrder.OLDEST;
+        sortOrder = SortOrder.NEWEST;
     }
 
     public Date beginDate;

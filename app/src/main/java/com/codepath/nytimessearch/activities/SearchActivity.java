@@ -32,6 +32,8 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.codepath.nytimessearch.models.SearchFilters.SortOrder.NEWEST;
+
 public class SearchActivity extends AppCompatActivity {
 
     static final String API_URL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -151,6 +153,29 @@ public class SearchActivity extends AppCompatActivity {
         params.put("api-key", API_KEY);
         params.put("page", currentPage);
         params.put("q", currentQuery);
+
+        //params.put("begin_date", searchFilters.beginDate.getTime());
+        params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
+
+        StringBuilder ndvStringBuilder = new StringBuilder();
+
+        if (searchFilters.ndvArts) {
+            ndvStringBuilder.append("\"Arts\" ");
+        }
+
+        if (searchFilters.ndvFashionStyle) {
+            ndvStringBuilder.append("\"Fashion & Style\" ");
+        }
+
+        if (searchFilters.ndvSports) {
+            ndvStringBuilder.append("\"Sports\" ");
+        }
+
+        String ndvQuery = ndvStringBuilder.length() == 0
+                ? ""
+                : "news_desk:(" + ndvStringBuilder.toString() + ")";
+
+        params.put("fq", ndvQuery);
 
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
