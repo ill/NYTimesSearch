@@ -19,6 +19,7 @@ import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.adapters.ArticleArrayAdapter;
 import com.codepath.nytimessearch.fragments.SearchFilterDialogGragment;
 import com.codepath.nytimessearch.models.Article;
+import com.codepath.nytimessearch.models.SearchFilters;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -46,6 +47,8 @@ public class SearchActivity extends AppCompatActivity {
     String currentQuery;
     int currentPage;
 
+    SearchFilters searchFilters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setupViews() {
+        searchFilters = new SearchFilters();
+
         gvResults = (GridView) findViewById(R.id.gvResults);
 
         articles = new ArrayList<>();
@@ -121,7 +126,7 @@ public class SearchActivity extends AppCompatActivity {
 
     void showFilterDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        SearchFilterDialogGragment editNameDialogFragment = SearchFilterDialogGragment.newInstance();
+        SearchFilterDialogGragment editNameDialogFragment = SearchFilterDialogGragment.newInstance(searchFilters);
         editNameDialogFragment.show(fm, "fragment_search_filters");
     }
 
