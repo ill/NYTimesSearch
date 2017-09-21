@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:padding="12dp">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Filter dialog goes here" />
+        android:gravity="center_horizontal"
+        android:text="@string/filter_begin_date" />
+
+    <DatePicker
+        android:id="@+id/dpDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/filter_sort_order" />
+
+    <Spinner
+        android:id="@+id/spSortOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View style="@style/Divider" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/filter_news_desk_values" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <CheckBox
+            android:id="@+id/cbSports"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ndv_sports" />
+
+        <CheckBox
+            android:id="@+id/cbFashionStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ndv_fashion_style" />
+
+        <CheckBox
+            android:id="@+id/cbArts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ndv_arts" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btSave"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btSave" />
+
 </LinearLayout>

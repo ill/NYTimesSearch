@@ -6,4 +6,11 @@
     <string name="title_activity_article">ArticleActivity</string>
     <string name="action_filter">Filter</string>
     <string name="action_search">Enter an article search query</string>
+    <string name="filter_begin_date">Begin Date</string>
+    <string name="filter_sort_order">Sort Order</string>
+    <string name="filter_news_desk_values">News Desk Values</string>
+    <string name="ndv_arts">Arts</string>
+    <string name="ndv_fashion_style">Fashion and Style</string>
+    <string name="ndv_sports">Sports</string>
+    <string name="btSave">Save</string>
 </resources>
