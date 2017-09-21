@@ -12,6 +12,8 @@ import java.util.ArrayList;
  */
 
 public class Article implements Serializable {
+    static final String THUMBNAIL_URL_PREFIX = "http://www.nytimes.com/";
+
     String webUrl;
 
     public String getWebUrl() {
@@ -38,7 +40,7 @@ public class Article implements Serializable {
 
             if (multimedia.length() > 0) {
                 JSONObject multimediaJson = multimedia.getJSONObject(0);
-                this.thumbNail = "http://www.nytimes.com/" + multimediaJson.getString("url");
+                this.thumbNail = THUMBNAIL_URL_PREFIX + multimediaJson.getString("url");
             }
             else {
                 this.thumbNail = "";
