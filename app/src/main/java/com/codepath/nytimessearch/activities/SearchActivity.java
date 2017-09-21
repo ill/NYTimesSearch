@@ -126,7 +126,12 @@ public class SearchActivity extends AppCompatActivity {
 
     void showFilterDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        SearchFilterDialogGragment editNameDialogFragment = SearchFilterDialogGragment.newInstance(searchFilters);
+        SearchFilterDialogGragment editNameDialogFragment = SearchFilterDialogGragment.newInstance(searchFilters, new SearchFilterDialogGragment.DidSaveListener() {
+            @Override
+            public void didSave() {
+                performNewArticleSearchQuery(currentQuery);
+            }
+        });
         editNameDialogFragment.show(fm, "fragment_search_filters");
     }
 

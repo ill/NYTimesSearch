@@ -23,6 +23,10 @@ import java.util.Date;
  */
 
 public class SearchFilterDialogGragment extends DialogFragment {
+    public interface DidSaveListener {
+        public void didSave();
+    }
+
     static final String SEARCH_FILTERS_KEY = "searchFilters";
 
     SearchFilters searchFilters;
@@ -33,14 +37,18 @@ public class SearchFilterDialogGragment extends DialogFragment {
     CheckBox cbFashionStyle;
     CheckBox cbArts;
 
+    DidSaveListener listener;
+
     public SearchFilterDialogGragment() {}
 
-    public static SearchFilterDialogGragment newInstance(SearchFilters searchFilters) {
+    public static SearchFilterDialogGragment newInstance(SearchFilters searchFilters, DidSaveListener listener) {
         SearchFilterDialogGragment frag = new SearchFilterDialogGragment();
 
         Bundle args = new Bundle();
         args.putSerializable(SEARCH_FILTERS_KEY, searchFilters);
         frag.setArguments(args);
+
+        frag.listener = listener;
 
         return frag;
     }
@@ -95,6 +103,10 @@ public class SearchFilterDialogGragment extends DialogFragment {
         searchFilters.ndvSports = cbSports.isChecked();
         searchFilters.ndvFashionStyle = cbFashionStyle.isChecked();
         searchFilters.ndvArts = cbArts.isChecked();
+
+        if (listener != null) {
+            listener.didSave();
+        }
 
         dismiss();
     }
