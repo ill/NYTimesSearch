@@ -29,9 +29,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+
+import static com.codepath.nytimessearch.models.SearchFilters.SortOrder.NEWEST;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -148,15 +151,13 @@ public class SearchActivity extends AppCompatActivity {
     @SuppressLint("SimpleDateFormat")
     void performArticleSearchQuery() {
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = API_URL;
 
         RequestParams params = new RequestParams();
         params.put("api-key", API_KEY);
         params.put("page", currentPage);
         params.put("q", currentQuery);
 
-        //params.put("begin_date", searchFilters.beginDate.getTime());
-        //params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
+        params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
 
         StringBuilder ndvStringBuilder = new StringBuilder();
 
@@ -172,16 +173,13 @@ public class SearchActivity extends AppCompatActivity {
             ndvStringBuilder.append("\"Sports\" ");
         }
 
-//        if (ndvStringBuilder.length() > 0) {
-//            params.put("fq", "news_desk:(" + ndvStringBuilder.toString() + ")");
-//        }
-//
-//        //only add begin date if not set to mintime
-//        if (searchFilters.beginDate.getTime() != 0) {
-//            params.put("begin_date", new SimpleDateFormat("YYYYMMDD").format(searchFilters.beginDate));
-//        }
+        if (ndvStringBuilder.length() > 0) {
+            params.put("fq", "news_desk:(" + ndvStringBuilder.toString() + ")");
+        }
 
-        client.get(url, params, new JsonHttpResponseHandler() {
+        params.put("begin_date", new SimpleDateFormat("yyyyMMdd").format(searchFilters.beginDate));
+
+        client.get(API_URL, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 JSONArray articleJsonResults = null;
