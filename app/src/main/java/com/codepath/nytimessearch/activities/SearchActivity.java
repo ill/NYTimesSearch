@@ -1,5 +1,6 @@
 package com.codepath.nytimessearch.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -31,8 +32,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
-
-import static com.codepath.nytimessearch.models.SearchFilters.SortOrder.NEWEST;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -145,6 +144,8 @@ public class SearchActivity extends AppCompatActivity {
         performArticleSearchQuery();
     }
 
+    //Suppressing the warning because I really want that date in that specific format for the NYTimes API query
+    @SuppressLint("SimpleDateFormat")
     void performArticleSearchQuery() {
         AsyncHttpClient client = new AsyncHttpClient();
         String url = API_URL;
@@ -155,7 +156,7 @@ public class SearchActivity extends AppCompatActivity {
         params.put("q", currentQuery);
 
         //params.put("begin_date", searchFilters.beginDate.getTime());
-        params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
+        //params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
 
         StringBuilder ndvStringBuilder = new StringBuilder();
 
@@ -171,11 +172,14 @@ public class SearchActivity extends AppCompatActivity {
             ndvStringBuilder.append("\"Sports\" ");
         }
 
-        String ndvQuery = ndvStringBuilder.length() == 0
-                ? ""
-                : "news_desk:(" + ndvStringBuilder.toString() + ")";
-
-        params.put("fq", ndvQuery);
+//        if (ndvStringBuilder.length() > 0) {
+//            params.put("fq", "news_desk:(" + ndvStringBuilder.toString() + ")");
+//        }
+//
+//        //only add begin date if not set to mintime
+//        if (searchFilters.beginDate.getTime() != 0) {
+//            params.put("begin_date", new SimpleDateFormat("YYYYMMDD").format(searchFilters.beginDate));
+//        }
 
         client.get(url, params, new JsonHttpResponseHandler() {
             @Override
@@ -188,6 +192,21 @@ public class SearchActivity extends AppCompatActivity {
                 } catch(JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
     }
