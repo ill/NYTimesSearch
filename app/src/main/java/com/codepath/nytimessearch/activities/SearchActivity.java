@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
                 if (page < 100) {
-                    performArticleSearchQueryDelayed(page);
+                    performArticleSearchQueryDelayed(page, 100);
                     return true; // ONLY if more data is actually being loaded; false otherwise.
                 }
                 else {
@@ -162,14 +162,14 @@ public class SearchActivity extends AppCompatActivity {
         performArticleSearchQuery(0);
     }
 
-    void performArticleSearchQueryDelayed(final int page) {
+    void performArticleSearchQueryDelayed(final int page, long delayMillis) {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 performArticleSearchQuery(page);
             }
-        }, 100);
+        }, delayMillis);
     }
 
     //Suppressing the warning because I really want that date in that specific format for the NYTimes API query
@@ -242,7 +242,7 @@ public class SearchActivity extends AppCompatActivity {
 
             void retryIfRateLimited(int statusCode) {
                 if (statusCode == 429) {
-                    performArticleSearchQueryDelayed(page);
+                    performArticleSearchQueryDelayed(page, 500);
                 }
             }
         });
