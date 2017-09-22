@@ -40,7 +40,10 @@ The following **bonus** features are implemented:
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] List anything else that you can get done to improve the app functionality!
+
+Made the query filter have some nice styling in the UI.  I added some dividers and made the UI of the filter look somewhat nice in general.
+I also tweaked the main menu to have the search bar to the left of a settings button for the query filter instead of leaving the query filter button under the ... menu.
 
 ## Video Walkthrough
 
