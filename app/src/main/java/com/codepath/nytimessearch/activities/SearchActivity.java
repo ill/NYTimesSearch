@@ -3,6 +3,7 @@ package com.codepath.nytimessearch.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -87,8 +88,13 @@ public class SearchActivity extends AppCompatActivity {
         gvResults.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                performArticleSearchQuery(page);
-                return true; // ONLY if more data is actually being loaded; false otherwise.
+                if (page < 100) {
+                    performArticleSearchQueryDelayed(page);
+                    return true; // ONLY if more data is actually being loaded; false otherwise.
+                }
+                else {
+                    return false;
+                }
             }
         });
     }
@@ -156,9 +162,19 @@ public class SearchActivity extends AppCompatActivity {
         performArticleSearchQuery(0);
     }
 
+    void performArticleSearchQueryDelayed(final int page) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                performArticleSearchQuery(page);
+            }
+        }, 100);
+    }
+
     //Suppressing the warning because I really want that date in that specific format for the NYTimes API query
     @SuppressLint("SimpleDateFormat")
-    void performArticleSearchQuery(int page) {
+    void performArticleSearchQuery(final int page) {
         AsyncHttpClient client = new AsyncHttpClient();
 
         RequestParams params = new RequestParams();
@@ -206,16 +222,28 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+
+                retryIfRateLimited(statusCode);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                retryIfRateLimited(statusCode);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                retryIfRateLimited(statusCode);
+            }
+
+            void retryIfRateLimited(int statusCode) {
+                if (statusCode == 429) {
+                    performArticleSearchQueryDelayed(page);
+                }
             }
         });
     }
