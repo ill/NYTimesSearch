@@ -18,6 +18,7 @@ import android.widget.GridView;
 
 import com.codepath.nytimessearch.R;
 import com.codepath.nytimessearch.adapters.ArticleArrayAdapter;
+import com.codepath.nytimessearch.adapters.EndlessScrollListener;
 import com.codepath.nytimessearch.fragments.SearchFilterDialogGragment;
 import com.codepath.nytimessearch.models.Article;
 import com.codepath.nytimessearch.models.SearchFilters;
@@ -49,7 +50,7 @@ public class SearchActivity extends AppCompatActivity {
     ArticleArrayAdapter adapter;
 
     String currentQuery;
-    int currentPage;
+    //int currentPage;
 
     SearchFilters searchFilters;
 
@@ -80,6 +81,14 @@ public class SearchActivity extends AppCompatActivity {
                 i.putExtra("article", article);
 
                 startActivity(i);
+            }
+        });
+
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                performArticleSearchQuery(page);
+                return true; // ONLY if more data is actually being loaded; false otherwise.
             }
         });
     }
@@ -140,21 +149,21 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     void performNewArticleSearchQuery(String query) {
-        currentPage = 0;
+        //currentPage = 0;
         currentQuery = query;
         adapter.clear();
 
-        performArticleSearchQuery();
+        performArticleSearchQuery(0);
     }
 
     //Suppressing the warning because I really want that date in that specific format for the NYTimes API query
     @SuppressLint("SimpleDateFormat")
-    void performArticleSearchQuery() {
+    void performArticleSearchQuery(int page) {
         AsyncHttpClient client = new AsyncHttpClient();
 
         RequestParams params = new RequestParams();
         params.put("api-key", API_KEY);
-        params.put("page", currentPage);
+        params.put("page", page/*currentPage*/);
         params.put("q", currentQuery);
 
         params.put("sort", searchFilters.sortOrder == NEWEST ? "newest" : "oldest");
@@ -187,6 +196,8 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     articleJsonResults = response.getJSONObject("response").getJSONArray("docs");
                     adapter.addAll(Article.fromJSONArray(articleJsonResults));
+
+                    //++currentPage;
                 } catch(JSONException e) {
                     e.printStackTrace();
                 }
